@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz App</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f1f1f1;
+  }
+  .container {
+    width: 400px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  h1 {
+    text-align: center;
+  }
+  #question {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  #choices {
+    list-style-type: none;
+    padding: 0;
+  }
+  .choice {
+    margin-bottom: 10px;
+  }
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Quiz App</h1>
+  <div id="question"></div>
+  <ul id="choices"></ul>
+  <button id="submit">Submit</button>
+  <p id="result"></p>
+</div>
+
+<script>
+  const questions = [
+    {
+      question: "What is the capital of France?",
+      choices: ["Paris", "London", "Berlin", "Rome"],
+      answer: "Paris"
+    },
+    {
+      question: "What is the largest planet in our solar system?",
+      choices: ["Earth", "Mars", "Jupiter", "Saturn"],
+      answer: "Jupiter"
+    },
+    {
+      question: "Who wrote 'Romeo and Juliet'?",
+      choices: ["William Shakespeare", "Charles Dickens", "Jane Austen", "Mark Twain"],
+      answer: "William Shakespeare"
+    }
+  ];
+
+  const questionElement = document.getElementById("question");
+  const choicesElement = document.getElementById("choices");
+  const submitButton = document.getElementById("submit");
+  const resultElement = document.getElementById("result");
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  function loadQuestion() {
+    const q = questions[currentQuestion];
+    questionElement.textContent = q.question;
+    choicesElement.innerHTML = "";
+    q.choices.forEach(choice => {
+      const li = document.createElement("li");
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "choice";
+      input.value = choice;
+      li.appendChild(input);
+      li.appendChild(document.createTextNode(choice));
+      choicesElement.appendChild(li);
+    });
+  }
+
+  function checkAnswer() {
+    const userAnswer = document.querySelector("input[name='choice']:checked");
+    if (!userAnswer) {
+      resultElement.textContent = "Please select an answer";
+      return;
+    }
+    if (userAnswer.value === questions[currentQuestion].answer) {
+      score++;
+      resultElement.textContent = "Correct!";
+    } else {
+      resultElement.textContent = "Incorrect!";
+    }
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      loadQuestion();
+    } else {
+      resultElement.textContent = `Quiz completed! Your score: ${score}/${questions.length}`;
+      submitButton.disabled = true;
+    }
+  }
+
+  submitButton.addEventListener("click", checkAnswer);
+
+  loadQuestion();
+</script>
+
+</body>
+</html>
